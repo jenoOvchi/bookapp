@@ -1,0 +1,40 @@
+version: '3'
+services:
+  postgresql:
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_PASSWORD: P@ssw0rd123
+      POSTGRES_DB: bookApp
+    networks:
+      - application
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  pgadmin:
+    image: dpage/pgadmin4
+    networks:
+      - application
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.org
+      PGADMIN_DEFAULT_PASSWORD: test
+    ports:
+      - '80:80'
+  bookapp:
+    image: bookapp:v1
+    networks:
+      - application
+    environment:
+      DATABASE_URL: postgres://postgres:P@ssw0rd123@postgresql:5432/bookApp?pool_max_conns=10
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgresql
+networks:
+  application:
+    driver: bridge
+
+volumes:
+  pg-data:
+    driver: local
