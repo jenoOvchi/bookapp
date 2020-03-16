@@ -33,5 +33,10 @@ pipeline {
                 echo "Some deployment steps"
             }
         }
+        stage ('Show Environment Variables') {
+            steps {
+                sh "env"
+            }
+        }
     }
 }
